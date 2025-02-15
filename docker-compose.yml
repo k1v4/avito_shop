@@ -1,6 +1,21 @@
 version: '3.8'
 
 services:
+  shop:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: shop_container
+    env_file:
+      - .env
+    ports:
+      - "${REST_SERVER_PORT}:${REST_SERVER_PORT}"
+    depends_on:
+      postgres_shop:
+        condition: service_healthy
+    networks:
+      - shop_network
+
   postgres_shop:
     image: postgres:15-alpine
     container_name: postgres_container_shop
