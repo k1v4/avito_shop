@@ -14,6 +14,12 @@ type ErrorResponse struct {
 }
 
 type SendCoinRequest struct {
-	ToUser string `json:"to_user"`
-	Amount int    `json:"amount"`
+	ToUserName string `json:"toUser"`
+	Amount     int    `json:"amount"`
+}
+
+type BothDirection struct {
+	ToUser   int `json:"toUser"`
+	FromUser int `json:"fromUser"`
+	Amount   int `json:"amount"`
 }
