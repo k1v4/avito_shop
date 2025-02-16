@@ -2,7 +2,6 @@ package config
 
 import (
 	"github.com/ilyakaznacheev/cleanenv"
-	"github.com/joho/godotenv"
 	"github.com/k1v4/avito_shop/pkg/DB/postgres"
 	"github.com/k1v4/avito_shop/pkg/DB/redis"
 )
@@ -15,10 +14,10 @@ type Config struct {
 }
 
 func MustLoadConfig() *Config {
-	errEnv := godotenv.Load(".env")
-	if errEnv != nil {
-		panic(errEnv)
-	}
+	//errEnv := godotenv.Load(".env")
+	//if errEnv != nil {
+	//	panic(errEnv)
+	//}
 
 	cfg := Config{}
 	err := cleanenv.ReadEnv(&cfg)

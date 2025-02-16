@@ -58,8 +58,8 @@ func TestInfo(t *testing.T) {
 				"coins": 100,
 				"inventory": {
 					"items": [
-						{"ItemId": 1, "type": "type1", "quantity": 5},
-						{"ItemId": 2, "type": "type2", "quantity": 10}
+						{"type": "type1", "quantity": 5},
+						{"type": "type2", "quantity": 10}
 					]
 				},
 				"coinHistory": {

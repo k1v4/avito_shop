@@ -32,13 +32,13 @@ func (s *ShopRepository) SaveUser(ctx context.Context, username string, passhash
 		Suffix("RETURNING id").
 		ToSql()
 	if err != nil {
-		return -1, fmt.Errorf("%s: %w", op, err)
+		return 0, fmt.Errorf("%s: %w", op, err)
 	}
 
 	var id int
 	err = s.Pool.QueryRow(ctx, sql, args...).Scan(&id)
 	if err != nil {
-		return -1, fmt.Errorf("%s: %w", op, err)
+		return 0, fmt.Errorf("%s: %w", op, err)
 	}
 
 	return id, nil

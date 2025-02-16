@@ -1,5 +1,6 @@
 суть.txt
 postgres_data
+redis_data
 s.md
 *.env
 !.env

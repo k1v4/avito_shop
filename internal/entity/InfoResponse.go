@@ -21,7 +21,7 @@ type Inventory struct {
 }
 
 type InventoryItem struct {
-	ItemId   int
+	ItemId   int    `json:"-"`
 	Type     string `json:"type"`
 	Quantity int    `json:"quantity"`
 }
