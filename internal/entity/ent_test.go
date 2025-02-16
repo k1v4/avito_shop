@@ -32,7 +32,6 @@ func TestMarshalBinary(t *testing.T) {
 		t.Errorf("Failed to marshal ResponseInfo: %v", err)
 	}
 
-	// Проверяем, что данные сериализуются в правильный JSON
 	expectedJSON := `{"coins":100,"inventory":{"items":[{"type":"gold","quantity":10},{"type":"silver","quantity":20}]},"coinHistory":{"received":{"items":[{"fromUser":"user1","amount":50}]},"sent":{"items":[{"toUser":"user2","amount":30}]}}}`
 	if string(data) != expectedJSON {
 		t.Errorf("Expected %s but got %s", expectedJSON, string(data))
@@ -48,7 +47,6 @@ func TestUnmarshalBinary(t *testing.T) {
 		t.Errorf("Failed to unmarshal ResponseInfo: %v", err)
 	}
 
-	// Проверяем, что данные десериализуются правильно
 	if response.Coins != 100 {
 		t.Errorf("Expected coins to be 100, got %d", response.Coins)
 	}

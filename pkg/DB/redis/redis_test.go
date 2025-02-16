@@ -30,12 +30,10 @@ func TestNewClient(t *testing.T) {
 	assert.NoError(t, err)
 	assert.NotNil(t, client)
 
-	// Test if client can ping the Redis server
 	pong, err := client.Ping(ctx).Result()
 	assert.NoError(t, err)
 	assert.Equal(t, "PONG", pong)
 
-	// Clean up and close the client connection
 	defer func() {
 		if err := client.Close(); err != nil {
 			t.Fatalf("could not close redis client: %v", err)

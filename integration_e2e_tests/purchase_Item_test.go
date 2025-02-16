@@ -27,18 +27,23 @@ func TestPurchaseItem_E2E(t *testing.T) {
 
 	// Шаг 2: Покупка предмета
 	client := &http.Client{}
+
 	req, err := http.NewRequest("GET", "http://localhost:8080/api/buy/hoody", nil)
 	assert.NoError(t, err)
+
 	req.Header.Set("Authorization", "Bearer "+token)
 	resp, err = client.Do(req)
+
 	assert.NoError(t, err)
 	assert.Equal(t, http.StatusOK, resp.StatusCode)
 
 	// Шаг 3: Проверка баланса и инвентаря
 	req, err = http.NewRequest("GET", "http://localhost:8080/api/info", nil)
 	assert.NoError(t, err)
+
 	req.Header.Set("Authorization", "Bearer "+token)
 	resp, err = client.Do(req)
+
 	assert.NoError(t, err)
 	assert.Equal(t, http.StatusOK, resp.StatusCode)
 
@@ -46,10 +51,10 @@ func TestPurchaseItem_E2E(t *testing.T) {
 	err = json.NewDecoder(resp.Body).Decode(&infoResp)
 	assert.NoError(t, err)
 
-	// Проверка баланса
-	assert.Equal(t, 700, infoResp.Coins) // Предположим, что предмет стоит 100 монет
+	// проверка баланса
+	assert.Equal(t, 700, infoResp.Coins)
 
-	// Проверка инвентаря
+	// проверка инвентаря
 	inventory := infoResp.Inventory
 	found := false
 	for _, item := range inventory.Items {
