@@ -40,7 +40,7 @@ func (r *conatainerRoutes) Info(c echo.Context) error {
 
 	token := jwtPkg.ExtractToken(c)
 	if token == "" {
-		errorResponse(c, http.StatusUnauthorized, "bad request")
+		errorResponse(c, http.StatusBadRequest, "bad request")
 
 		return fmt.Errorf("%s: %s", op, "token is required")
 	}
@@ -99,7 +99,7 @@ func (r *conatainerRoutes) SendCoins(c echo.Context) error {
 		return fmt.Errorf("%s: %w", op, err)
 	}
 
-	return c.JSON(http.StatusOK, nil)
+	return c.JSON(http.StatusOK, map[string]interface{}{})
 }
 
 func (r *conatainerRoutes) Buy(c echo.Context) error {
@@ -141,7 +141,7 @@ func (r *conatainerRoutes) Buy(c echo.Context) error {
 		return fmt.Errorf("%s: %s", op, err)
 	}
 
-	return c.JSON(http.StatusOK, nil)
+	return c.JSON(http.StatusOK, map[string]interface{}{})
 }
 
 func (r *conatainerRoutes) Auth(c echo.Context) error {

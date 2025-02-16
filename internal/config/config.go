@@ -4,10 +4,12 @@ import (
 	"github.com/ilyakaznacheev/cleanenv"
 	"github.com/joho/godotenv"
 	"github.com/k1v4/avito_shop/pkg/DB/postgres"
+	"github.com/k1v4/avito_shop/pkg/DB/redis"
 )
 
 type Config struct {
 	postgres.DBConfig
+	redis.RedisConfig
 
 	RestServerPort int `env:"REST_SERVER_PORT" env-description:"rest server port" env-default:"8080"`
 }

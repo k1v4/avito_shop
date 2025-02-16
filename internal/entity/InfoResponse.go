@@ -1,9 +1,19 @@
 package entity
 
+import "encoding/json"
+
 type ResponseInfo struct {
 	Coins       int         `json:"coins"`
 	Inventory   Inventory   `json:"inventory"`
 	CoinHistory CoinHistory `json:"coinHistory"`
+}
+
+func (o *ResponseInfo) MarshalBinary() ([]byte, error) {
+	return json.Marshal(o)
+}
+
+func (o *ResponseInfo) UnmarshalBinary(data []byte) error {
+	return json.Unmarshal(data, o)
 }
 
 type Inventory struct {

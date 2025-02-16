@@ -8,6 +8,7 @@ import (
 	"github.com/k1v4/avito_shop/internal/usecase"
 	"github.com/k1v4/avito_shop/internal/usecase/repository"
 	"github.com/k1v4/avito_shop/pkg/DB/postgres"
+	"github.com/k1v4/avito_shop/pkg/DB/redis"
 	"github.com/k1v4/avito_shop/pkg/httpserver"
 	"github.com/k1v4/avito_shop/pkg/logger"
 	"github.com/labstack/echo/v4"
@@ -20,6 +21,7 @@ import (
 func main() {
 	ctx := context.Background()
 	loggerBack := logger.NewLogger()
+	ctx = context.WithValue(ctx, logger.LoggerKey, loggerBack)
 
 	loggerBack.Info(ctx, "starting backend")
 
@@ -28,6 +30,13 @@ func main() {
 		loggerBack.Error(ctx, "config is nil")
 		return
 	}
+
+	clientRedis, err := redis.NewClient(ctx, cfg.RedisConfig)
+	if err != nil {
+		loggerBack.Error(ctx, "redis client init fail")
+	}
+
+	_ = clientRedis
 
 	url := fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable",
 		cfg.DBConfig.UserName,
@@ -47,6 +56,7 @@ func main() {
 
 	containerUseCase := usecase.NewShopUseCase(
 		repository.NewShopRepository(pg),
+		clientRedis,
 	)
 
 	handler := echo.New()

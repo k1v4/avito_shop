@@ -16,6 +16,7 @@ type logger struct {
 	logger      *zap.Logger
 }
 
+//go:generate go run github.com/vektra/mockery/v2@v2.43.2 --name=Logger
 type Logger interface {
 	Info(ctx context.Context, msg string, fields ...zap.Field)
 	Error(ctx context.Context, msg string, fields ...zap.Field)

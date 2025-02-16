@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/k1v4/avito_shop/internal/entity"
 	"github.com/k1v4/avito_shop/pkg/jwtPkg"
+	"github.com/redis/go-redis/v9"
 	"golang.org/x/crypto/bcrypt"
 	"time"
 )
@@ -17,11 +18,15 @@ var (
 )
 
 type ShopUseCase struct {
-	repo IShopRepository
+	repo  IShopRepository
+	cache *redis.Client
 }
 
-func NewShopUseCase(r IShopRepository) *ShopUseCase {
-	return &ShopUseCase{repo: r}
+func NewShopUseCase(r IShopRepository, red *redis.Client) *ShopUseCase {
+	return &ShopUseCase{
+		repo:  r,
+		cache: red,
+	}
 }
 
 func (uc *ShopUseCase) Login(ctx context.Context, username, password string) (string, error) {
@@ -115,6 +120,15 @@ func (uc *ShopUseCase) SendCoins(ctx context.Context, toUserName string, fromUse
 		return ErrNoUser
 	}
 
+	fromUser, err := uc.repo.GetUserById(ctx, fromUserId)
+	if err != nil {
+		return ErrNoUser
+	}
+
+	if fromUser.Coins < amount {
+		return ErrNoCoins
+	}
+
 	toUserId := toUser.Id
 
 	err = uc.repo.TakeGiveCoins(ctx, toUserId, amount)
@@ -138,6 +152,11 @@ func (uc *ShopUseCase) SendCoins(ctx context.Context, toUserName string, fromUse
 func (uc *ShopUseCase) GetInfo(ctx context.Context, userId int) (entity.ResponseInfo, error) {
 	const op = "ShopUseCase.GetInfo"
 	var res entity.ResponseInfo
+
+	err := uc.cache.Get(ctx, fmt.Sprintf("%d", userId)).Scan(&res)
+	if err != nil && !errors.Is(err, redis.Nil) {
+		return res, fmt.Errorf("%s: %w", op, err)
+	}
 
 	// Coins
 	user, err := uc.repo.GetUserById(ctx, userId)
@@ -204,6 +223,8 @@ func (uc *ShopUseCase) GetInfo(ctx context.Context, userId int) (entity.Response
 	}
 
 	res.CoinHistory = coinHistory
+
+	uc.cache.Set(context.Background(), fmt.Sprintf("%d", userId), res, 1*time.Minute)
 
 	return res, nil
 }
