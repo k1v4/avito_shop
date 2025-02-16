@@ -1,0 +1,43 @@
+linters:
+  disable-all: true
+  enable:
+    - gofmt
+    - goimports
+    - govet
+    - staticcheck
+    - errcheck
+    - gosimple
+    - unused
+    - ineffassign
+    - bodyclose
+    - gocritic
+    - gocyclo
+    - gosec
+    - lll
+
+linters-settings:
+  gocyclo:
+    min-complexity: 10
+  gocritic:
+    enabled-tags:
+      - performance
+      - style
+  gosec:
+    excludes:
+      - G104 # предупреждения о непроверенных ошибках
+
+output:
+  print-issued-lines: true
+  print-linter-name: true
+
+issues:
+  exclude-rules:
+    - path: _test\.go
+      linters:
+        - gocyclo
+    - text: "line is 120 characters"
+      linters:
+        - lll
+
+exclude-files:
+  - "*.gen.go"
